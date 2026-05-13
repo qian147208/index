@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>钱云飞 - 蓝天白云</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Canvas for soft floating bokeh (sunlight dust) -->
+  <canvas id="bg-canvas"></canvas>
+
+  <div class="container">
+    <header class="glass-card hero" data-tilt>
+      <div class="card-content">
+        <div class="avatar-container">
+          <img src="avatar.png" alt="钱云飞 Avatar" class="avatar" />
+          <div class="avatar-glow"></div>
+        </div>
+        <h1 class="name">钱云飞 <span class="en-name">QIAN YUNFEI</span></h1>
+        <h2 class="title">AI 产品经理</h2>
+        <p class="tagline">像晴朗的天空一样透明，<br>用 AI 带来清晰明朗的产品体验。</p>
+      </div>
+    </header>
+
+    <div class="main-content">
+      <section class="glass-card section-card" data-tilt>
+        <div class="card-content">
+          <h3 class="section-title">01 / 个人信息</h3>
+          <ul class="info-list">
+            <li><span>性别/年龄</span><strong>男 · 26</strong></li>
+            <li><span>工作年限</span><strong>4 年</strong></li>
+            <li><span>电话</span><strong>199-9191-9999</strong></li>
+            <li><span>邮箱</span><strong>17788822299@qq.com</strong></li>
+            <li><span>学历</span><strong>本科 · 人机交互</strong></li>
+            <li><span>所在地</span><strong>上海 · 浦东</strong></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="glass-card section-card" data-tilt>
+        <div class="card-content">
+          <h3 class="section-title">02 / 项目经历</h3>
+          <div class="project-item">
+            <div class="project-header">
+              <h4>企业级 AI 助手产品</h4>
+              <span class="date">2024 - 至今</span>
+            </div>
+            <p>主导面向企业知识管理的 AI 助手从 0 到 1 落地。完成需求拆解、模型选型、RAG 链路设计与体验打磨，上线半年覆盖 200+ 企业客户，问答满意度达 92%。</p>
+            <div class="tags"><span>LLM</span><span>RAG</span><span>Prompt</span><span>需求分析</span></div>
+          </div>
+          <div class="project-item">
+            <div class="project-header">
+              <h4>AIGC 内容创作平台</h4>
+              <span class="date">2023 - 2024</span>
+            </div>
+            <p>负责文字 + 图像多模态创作产品的策略与功能规划，推动模型迭代与 UX 优化，月活突破百万，付费转化率提升 38%。</p>
+            <div class="tags"><span>多模态</span><span>商业化</span><span>增长策略</span></div>
+          </div>
+          <div class="project-item">
+            <div class="project-header">
+              <h4>智能客服 Copilot</h4>
+              <span class="date">2022 - 2023</span>
+            </div>
+            <p>基于大模型重构客服系统，设计意图识别、话术推荐与摘要总结模块，单坐席处理效率提升 50%，人工成本下降 30%。</p>
+            <div class="tags"><span>对话系统</span><span>NLP</span><span>效率工具</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="glass-card section-card" data-tilt>
+        <div class="card-content">
+          <h3 class="section-title">03 / 核心优势</h3>
+          <div class="strength-grid">
+            <div class="strength-box">
+              <i class="icon">☀️</i>
+              <h5>AI 技术理解</h5>
+              <p>熟悉 LLM, RAG, Agent 的能力边界与适用场景。</p>
+            </div>
+            <div class="strength-box">
+              <i class="icon">☁️</i>
+              <h5>用户洞察</h5>
+              <p>擅长场景拆解，从真实痛点提炼 AI 核心价值。</p>
+            </div>
+            <div class="strength-box">
+              <i class="icon">✨</i>
+              <h5>数据驱动</h5>
+              <p>习惯用指标说话，A/B 实验闭环验证每一次决策。</p>
+            </div>
+            <div class="strength-box">
+              <i class="icon">🤝</i>
+              <h5>跨界协作</h5>
+              <p>在算法与研发间精准传递目标，推复杂项目上线。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // Soft floating bokeh (sunlight dust)
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let width, height;
+    let particles = [];
+    const particleCount = window.innerWidth < 768 ? 30 : 60;
+
+    let mouse = { x: null, y: null };
+
+    function initCanvas() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+    }
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            // Float slowly upwards
+            this.vx = (Math.random() - 0.5) * 0.5;
+            this.vy = -Math.random() * 0.5 - 0.1;
+            this.radius = Math.random() * 6 + 2; // bigger bokeh
+            this.opacity = Math.random() * 0.4 + 0.1; // soft opacity
+            this.baseRadius = this.radius;
+            this.pulseRate = Math.random() * 0.05 + 0.01;
+            this.angle = Math.random() * Math.PI * 2;
+        }
+
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            
+            // Subtle pulse
+            this.angle += this.pulseRate;
+            this.radius = this.baseRadius + Math.sin(this.angle) * 2;
+
+            // Wrap around top
+            if (this.x < -20) this.x = width + 20;
+            if (this.x > width + 20) this.x = -20;
+            if (this.y < -20) {
+                this.y = height + 20;
+                this.x = Math.random() * width;
+            }
+            
+            // Mouse push interaction
+            if (mouse.x != null && mouse.y != null) {
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < 150) {
+                    this.x -= dx * 0.01;
+                    this.y -= dy * 0.01;
+                }
+            }
+        }
+
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, Math.max(0.1, this.radius), 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+            ctx.fill();
+        }
+    }
+
+    function initParticles() {
+        particles = [];
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+    }
+
+    function animateParticles() {
+        ctx.clearRect(0, 0, width, height);
+        
+        particles.forEach(p => {
+            p.update();
+            p.draw();
+        });
+        
+        requestAnimationFrame(animateParticles);
+    }
+
+    window.addEventListener('resize', () => {
+        initCanvas();
+        initParticles();
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+    });
+
+    window.addEventListener('mouseout', () => {
+        mouse.x = null;
+        mouse.y = null;
+    });
+
+    initCanvas();
+    initParticles();
+    animateParticles();
+
+    // 3D Tilt Effect on Cards & Bright Glow Tracking
+    const cards = document.querySelectorAll('.glass-card');
+
+    cards.forEach(card => {
+        card.addEventListener('mousemove', e => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            card.style.setProperty('--x', `${x}px`);
+            card.style.setProperty('--y', `${y}px`);
+            
+            if(card.hasAttribute('data-tilt')) {
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -4; // softer tilt
+                const rotateY = ((x - centerX) / centerX) * 4;
+                
+                card.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`;
+            }
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.setProperty('--x', `-1000px`);
+            card.style.setProperty('--y', `-1000px`);
+            if(card.hasAttribute('data-tilt')) {
+                card.style.transform = `perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+            }
+        });
+    });
+  </script>
+</body>
+</html>
