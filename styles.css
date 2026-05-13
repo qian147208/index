@@ -327,3 +327,51 @@ body {
   color: var(--text-main);
   line-height: 1.6;
 }
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px 12px;
+    gap: 20px;
+  }
+  .glass-card {
+    padding: 24px 20px;
+    border-radius: 20px;
+  }
+  .avatar-container {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 15px;
+  }
+  .name {
+    font-size: 26px;
+  }
+  .title {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  .tagline {
+    font-size: 13px;
+  }
+  .section-title {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+  .project-item {
+    padding: 18px;
+  }
+  .project-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .project-header h4 {
+    font-size: 16px;
+  }
+  .project-item p {
+    font-size: 13.5px;
+  }
+  .strength-box {
+    padding: 16px;
+  }
+}
